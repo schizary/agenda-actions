@@ -16,10 +16,10 @@ jobs:
           fetch-depth: 0
 
       - name: Mostrar referência completa
-        run: echo "Tag detectada: $GITHUB_REF"
+        run: 'echo "Tag detectada: $GITHUB_REF"'
 
       - name: Mostrar nome simplificado da tag
-        run: echo "Versão: ${GITHUB_REF#refs/tags/}"
+        run: "echo \"Versão: ${GITHUB_REF#refs/tags/}\""
 
       - name: Extrair versão
         id: extract-version
