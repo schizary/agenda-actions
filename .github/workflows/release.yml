@@ -1,0 +1,39 @@
+name: Release Workflow Agenda
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+jobs:
+  detectar-versao:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Mostrar referência completa
+        run: echo "Tag detectada: $GITHUB_REF"
+
+      - name: Mostrar nome simplificado da tag
+        run: echo "Versão: ${GITHUB_REF#refs/tags/}"
+
+      - name: Extrair versão
+        id: extract-version
+        run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Gerar changelog
+        run: |
+          echo "📋 Gerando changelog para a versão ${{ steps.extract-version.outputs.version }}"
+          echo "📝 Último commit:"
+          git log -1 --pretty=format:"%h - %an - %s"
+          echo "✅ Release ${{ steps.extract-version.outputs.version }} preparada com sucesso!"
+
+      - name: Upload artifacts (exemplo)
+        uses: actions/upload-artifact@v3
+        with:
+          name: release-info-${{ steps.extract-version.outputs.version }}
+          path: README.md
